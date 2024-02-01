@@ -1,0 +1,99 @@
+language: cpp
+
+dist: trusty
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test # For newer GCC
+    - george-edison55-precise-backports # For cmake
+    - llvm-toolchain-trusty-7
+    packages:
+    - autoconf
+    - automake
+    - bash
+    - bison
+    - build-essential
+    - cmake
+    - ctags
+    - curl
+    - doxygen
+    - flex
+    - fontconfig
+    - gcc-6
+    - g++-6
+    - gcc-4.9
+    - gdb
+    - git
+    - gperf
+    - libcairo2-dev
+    - libevent-dev
+    - libfontconfig1-dev
+    - liblist-moreutils-perl
+    - libncurses5-dev
+#    - libtbb-dev
+    - libx11-dev
+    - libxft-dev
+    - libxml++2.6-dev
+    - perl
+    - python
+    - texinfo
+    - time
+    - valgrind
+    - zip
+    - qt5-default
+    - clang-format-7
+
+cache:
+  ccache: true
+  directories:
+    - /home/travis/vtr-build
+    - /home/travis/vtr
+
+stages:
+  - Build
+  - Test
+
+jobs:
+  include:
+    - stage: Build
+      name: "Building VtR"
+      script:
+        - ./.github/travis/build.sh
+    - stage: Test
+      name: "Code Formatting"
+      script:
+        - ./dev/check-format.sh
+    - stage: Test
+      name: "C++ Unit Tests"
+      script:
+        - ./.github/travis/unittest.sh
+    - stage: Test
+      name: "Basic Regression Tests"
+      script:
+        - ./run_reg_test.pl vtr_reg_basic -j2
+    - stage: Test
+      name: "Strong Regression Tests"
+      script:
+        - ./run_reg_test.pl vtr_reg_strong -j2
+    - stage: Test
+      name: "Basic Valgrind Memory Tests"
+      script:
+        - ./run_reg_test.pl vtr_reg_valgrind_small -j2
+    - stage: Test
+      name: "ODIN-II Micro Tests"
+      script:
+        - ./run_reg_test.pl odin_reg_micro -j2
+    - stage: Test
+      name: "ODIN-II Operators Tests"
+      script:
+        - ./run_reg_test.pl odin_reg_operators -j2
+
+before_script:
+  - source .github/travis/common.sh
+  - ./.github/travis/setup.sh
+
+after_script:
+  - ./.github/travis/setup.sh
+
+script:
+  - true
