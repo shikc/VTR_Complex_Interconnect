@@ -3225,6 +3225,7 @@ static void ProcessSecondStage(pugi::xml_node Stage_Node, std::vector<t_firststa
             mux_same_f.x_offset = get_attribute(SubElem, "x_offset", loc_data, OPTIONAL).as_int(0);
             mux_same_f.y_offset = get_attribute(SubElem, "y_offset", loc_data, OPTIONAL).as_int(0);
             mux_same_f.z_offset = get_attribute(SubElem, "z_offset", loc_data, OPTIONAL).as_int(0);
+	    mux_same_f.switchpoint = get_attribute(SubElem, "switchpoint", loc_data, OPTIONAL).as_int(0);
 
             tmp = get_attribute(SubElem, "from_detail", loc_data).as_string();
             auto detail_strs = vtr::split(tmp, " ");
